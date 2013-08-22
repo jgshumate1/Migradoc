@@ -50,6 +50,21 @@ namespace MigraDoc.DocumentObjectModel.Shapes
     {
     }
 
+    public Image(MemoryStream imageStream)
+        : this()
+    {
+        ImageStream = imageStream;   // Added new property to hold the stream
+        Name = String.Empty;         // When no filename, we'll look for the stream.
+    }
+
+    // for convenience, added Image class property to indicate whether this image is file or stream
+    public bool StreamBased
+    {
+        get { return ImageStream != null; }
+    }
+
+    public MemoryStream ImageStream;
+  
     /// <summary>
     /// Initializes a new instance of the Image class with the specified parent.
     /// </summary>
@@ -200,6 +215,11 @@ namespace MigraDoc.DocumentObjectModel.Shapes
     public string GetFilePath(string workingDir)
     {
       string filePath = "";
+
+     if (StreamBased)
+     {
+         return String.Empty;
+     }
 
       try
       {

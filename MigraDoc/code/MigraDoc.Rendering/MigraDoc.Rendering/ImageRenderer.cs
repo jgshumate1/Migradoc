@@ -106,8 +106,17 @@ namespace MigraDoc.Rendering
         try
         {
           XRect srcRect = new XRect(formatInfo.CropX, formatInfo.CropY, formatInfo.CropWidth, formatInfo.CropHeight);
-          xImage = XImage.FromFile(formatInfo.ImagePath);
-          this.gfx.DrawImage(xImage, destRect, srcRect, XGraphicsUnit.Point); //Pixel.
+
+            if (image.StreamBased)
+            {
+                xImage = new XImage(image.ImageStream);
+            }
+            else
+            {
+                xImage = XImage.FromFile(formatInfo.ImagePath);
+            }
+            
+            this.gfx.DrawImage(xImage, destRect, srcRect, XGraphicsUnit.Point); //Pixel.
         }
         catch (Exception)
         {
@@ -165,7 +174,14 @@ namespace MigraDoc.Rendering
         XImage xImage = null;
         try
         {
-          xImage = XImage.FromFile(this.imageFilePath);
+            if (image.StreamBased)
+            {
+                xImage = new XImage(image.ImageStream);
+            }
+            else
+            {
+                xImage = XImage.FromFile(formatInfo.ImagePath);
+            }
         }
         catch (InvalidOperationException ex)
         {

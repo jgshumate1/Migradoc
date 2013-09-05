@@ -32,12 +32,14 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using MigraDoc.DocumentObjectModel.Internals;
 using MigraDoc.DocumentObjectModel.Visitors;
 using MigraDoc.DocumentObjectModel.Shapes.Charts;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.DocumentObjectModel.Shapes;
+using MigraDoc.Html;
 
 namespace MigraDoc.DocumentObjectModel
 {
@@ -173,6 +175,11 @@ namespace MigraDoc.DocumentObjectModel
       return this.Elements.AddImage(fileName);
     }
 
+    public Image AddImage(MemoryStream stream)
+    {
+        return this.Elements.AddImage(stream);
+    }
+
     /// <summary>
     /// Adds a new textframe to the section.
     /// </summary>
@@ -220,6 +227,23 @@ namespace MigraDoc.DocumentObjectModel
     {
       this.Elements.Add(textFrame);
     }
+
+    public Section AddHtml(ExCSS.Stylesheet sheet, string contents, IConverter converter)
+    {
+        if (string.IsNullOrEmpty(contents))
+        {
+            throw new ArgumentNullException("contents");
+        }
+        if (converter == null)
+        {
+            throw new ArgumentNullException("converter");
+        }
+
+        Action<Section> addAction = converter.Convert(sheet, contents);
+        addAction(this);
+        return this;
+    }
+
     #endregion
 
     #region Properties

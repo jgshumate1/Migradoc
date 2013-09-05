@@ -32,6 +32,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using MigraDoc.DocumentObjectModel.Internals;
 using MigraDoc.DocumentObjectModel.Visitors;
@@ -177,6 +178,13 @@ namespace MigraDoc.DocumentObjectModel
       image.Name = name;
       Add(image);
       return image;
+    }
+
+    public Image AddImage(MemoryStream stream)
+    {
+        Image image = new Image(stream);
+        Add(image);
+        return image;
     }
 
     /// <summary>

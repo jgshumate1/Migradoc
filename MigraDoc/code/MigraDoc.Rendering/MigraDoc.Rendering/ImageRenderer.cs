@@ -60,18 +60,22 @@ namespace MigraDoc.Rendering
 
     internal override void Format(Area area, FormatInfo previousFormatInfo)
     {
-      this.imageFilePath = image.GetFilePath(this.documentRenderer.WorkingDirectory);
-      //if (!File.Exists(this.imageFilePath))
-      if (!XImage.ExistsFile(this.imageFilePath))
-      {
-        this.failure = ImageFailure.FileNotFound;
-        Trace.WriteLine(Messages.ImageNotFound(this.image.Name), "warning");
-      }
-      ImageFormatInfo formatInfo = (ImageFormatInfo)this.renderInfo.FormatInfo;
-      formatInfo.failure = this.failure;
-      formatInfo.ImagePath = this.imageFilePath;
-      CalculateImageDimensions();
-      base.Format(area, previousFormatInfo);
+        if (!image.StreamBased)
+        {
+            this.imageFilePath = image.GetFilePath(this.documentRenderer.WorkingDirectory);
+            //if (!File.Exists(this.imageFilePath))
+            if (!XImage.ExistsFile(this.imageFilePath))
+            {
+                this.failure = ImageFailure.FileNotFound;
+                Trace.WriteLine(Messages.ImageNotFound(this.image.Name), "warning");
+            }
+        }
+
+        ImageFormatInfo formatInfo = (ImageFormatInfo)this.renderInfo.FormatInfo;
+        formatInfo.failure = this.failure;
+        formatInfo.ImagePath = this.imageFilePath;
+        CalculateImageDimensions();
+        base.Format(area, previousFormatInfo);
     }
 
     protected override XUnit ShapeHeight

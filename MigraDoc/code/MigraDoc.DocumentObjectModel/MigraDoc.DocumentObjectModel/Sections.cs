@@ -81,6 +81,7 @@ namespace MigraDoc.DocumentObjectModel
       this.Add(section);
       return section;
     }
+      
     #endregion
 
     #region Internal

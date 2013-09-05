@@ -41,7 +41,7 @@ namespace MigraDoc.DocumentObjectModel.Shapes
   /// <summary>
   /// Represents an image in the document or paragraph.
   /// </summary>
-  public class Image : Shape
+  public class Image : Shape, IDisposable
   {
     /// <summary>
     /// Initializes a new instance of the Image class.
@@ -53,7 +53,9 @@ namespace MigraDoc.DocumentObjectModel.Shapes
     public Image(MemoryStream imageStream)
         : this()
     {
-        ImageStream = imageStream;   // Added new property to hold the stream
+        // Added new property to hold the stream
+        ImageStream = new MemoryStream();
+        ImageStream.Write(imageStream.GetBuffer(), 0, imageStream.GetBuffer().Length);
         Name = String.Empty;         // When no filename, we'll look for the stream.
     }
 
@@ -263,5 +265,15 @@ namespace MigraDoc.DocumentObjectModel.Shapes
     }
     static Meta meta;
     #endregion
+
+      public void Dispose()
+      {
+          if (ImageStream != null)
+          {
+              ImageStream.Close();
+              ImageStream.Dispose();
+              ImageStream = null;
+          }
+      }
   }
 }
